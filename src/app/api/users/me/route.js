@@ -1,11 +1,12 @@
 import { connectDB } from "../../../../dbConfig.js/dbConfig";
 import User from "../../../../models/userModel";
 import { NextResponse } from "next/server";
-import { getDataFromToken } from "@/utils/getDataFromToken";
+import { getDataFromToken } from "../../../../utils/getDataFromToken";
 
 connectDB();
 
 export const POST = async (req) => {
+  console.log("sdfsdf");
   try {
     const userId = await getDataFromToken(req);
 
@@ -14,6 +15,8 @@ export const POST = async (req) => {
     if (!user) {
       return NextResponse.json({ error: "You are not authorized to perform this action" }, { status: 401 });
     }
+
+    return NextResponse.json({ data: user, message: "Your Profile Data" }, { status: 200 });
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }

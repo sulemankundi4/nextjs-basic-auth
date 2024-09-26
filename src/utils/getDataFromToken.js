@@ -1,7 +1,4 @@
-import { connectDB } from "../../../../dbConfig.js/dbConfig";
-import { jwt } from "jsonwebtoken";
-
-connectDB();
+import jwt from "jsonwebtoken";
 
 export const getDataFromToken = async (req) => {
   try {
