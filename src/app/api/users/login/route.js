@@ -1,7 +1,8 @@
 import { connectDB } from "../../../../dbConfig.js/dbConfig";
 import User from "../../../../models/userModel";
 import { NextResponse } from "next/server";
-
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 connectDB();
 
 export const POST = async (req) => {
@@ -17,7 +18,25 @@ export const POST = async (req) => {
       return NextResponse.json({ error: "Invalid email or password" }, { status: 400 });
     }
 
-    return NextResponse.json({ message: "Email verified successfully", success: true }, { status: 200 });
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      if (!isMatch) {
+        return NextResponse.json({ error: "Invalid email or password" }, { status: 400 });
+      }
+    });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+
+    const responce = NextResponse.json({
+      message: "User logged in successfully",
+      success: true,
+      token,
+    });
+
+    responce.cookies.set("token", token, {
+      httpOnly: true,
+    });
+
+    return responce;
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
