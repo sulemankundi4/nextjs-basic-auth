@@ -6,10 +6,10 @@ import { getDataFromToken } from "../../../../utils/getDataFromToken";
 connectDB();
 
 export const POST = async (req) => {
-  console.log("sdfsdf");
   try {
+    console.log("coming here");
     const userId = await getDataFromToken(req);
-
+    console.log(userId);
     const user = await User.findById(userId).select("-password");
 
     if (!user) {
